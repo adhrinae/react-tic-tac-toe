@@ -36,6 +36,13 @@ class Game extends Component {
       stepNumber: step,
       xIsNext: (step % 2) ? false : true,
     });
+
+    const steps = document.querySelectorAll('li');
+    const selected = [...steps].filter(step => step.classList.contains('selected'))[0];
+    if (selected) {
+      selected.classList.remove('selected');
+    }
+    steps[step].classList.add('selected');
   }
 
   render() {
@@ -50,7 +57,7 @@ class Game extends Component {
       
       return (
         <li key={move}>
-          <a href="#" onClick={() => this.jumpTo(move)}>{desc}</a>
+          <div onClick={() => this.jumpTo(move)}>{desc}</div>
         </li>
       );
     });
