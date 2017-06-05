@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 
 function Move(props) {
   const { x, y } = props.step.checked;
-  const desc = props.index ?
+  const { jumpTo, index } = props;
+  const order = x && y ?
     `Move (${x}, ${y})` :
     'Game start';
 
   return (
     <li>
-      <div onClick={() => props.jumpTo(props.index)}>{desc}</div>
+      <div onClick={() => jumpTo(index)}>{order}</div>
     </li>
   );
 }

@@ -43,6 +43,11 @@ class Game extends Component {
     });
   }
 
+  toggleOrder = () => {
+    const history = this.state.history.slice().reverse();
+    this.setState({ history });
+  }
+
   jumpTo = (step) => {
     const history = this.state.history.slice(0, step + 1);
     this.setState({
@@ -83,6 +88,7 @@ class Game extends Component {
           <MoveList
             history={history}
             jumpTo={this.jumpTo} />
+          <button onClick={this.toggleOrder}>Reverse History Order</button>
         </div>
       </div>
     );
