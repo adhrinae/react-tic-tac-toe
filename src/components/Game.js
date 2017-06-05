@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Board from './Board';
+import MoveList from './MoveList';
 import { calculateWinner, cloneNestedArray } from '../utils';
 
 class Game extends Component {
@@ -42,7 +43,7 @@ class Game extends Component {
     });
   }
 
-  jumpTo(step) {
+  jumpTo = (step) => {
     const history = this.state.history.slice(0, step + 1);
     this.setState({
       history,
@@ -63,19 +64,6 @@ class Game extends Component {
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
 
-    const moves = history.map((step, move) => {
-      const { x, y } = step.checked;
-      const desc = move ?
-        `Move (${x}, ${y})` :
-        'Game start';
-      
-      return (
-        <li key={move}>
-          <div onClick={() => this.jumpTo(move)}>{desc}</div>
-        </li>
-      );
-    });
-
     let status;
     if (winner) {
       status = `Winner: ${winner}`;
@@ -92,7 +80,9 @@ class Game extends Component {
         </div>
         <div className="game-info">
           <div>{status}</div>
-          <ol>{moves}</ol>
+          <MoveList
+            history={history}
+            jumpTo={this.jumpTo} />
         </div>
       </div>
     );
