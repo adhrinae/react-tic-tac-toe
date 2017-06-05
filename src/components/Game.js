@@ -1,30 +1,41 @@
 import React, { Component } from 'react';
 import Board from './Board';
-import { calculateWinner } from '../utils';
+import { calculateWinner, cloneNestedArray } from '../utils';
 
 class Game extends Component {
   constructor() {
     super();
     this.state = {
       history: [{
-        squares: Array(9).fill(null),
+        squares: [
+          [null, null, null],
+          [null, null, null],
+          [null, null, null],
+        ],
+        checked: {
+          x: 0,
+          y: 0
+        }
       }],
       stepNumber: 0,
       xIsNext: true,
     };
   }
 
-  handleClick(i) {
+  handleClick(x, y) {
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
-    const squares = current.squares.slice();
-    if (calculateWinner(squares) || squares[i]) {
+    const squares = cloneNestedArray(current.squares.slice());
+    if (calculateWinner(squares) || squares[x][y]) {
       return;
     }
-    squares[i] = this.state.xIsNext ? 'X' : 'O';
+    squares[x][y] = this.state.xIsNext ? 'X' : 'O';
+    const checked = { x: x + 1, y: y + 1 };
+    
     this.setState({
       history: history.concat([{
-        squares
+        squares,
+        checked
       }]),
       stepNumber: history.length,
       xIsNext: !this.state.xIsNext,
@@ -32,7 +43,9 @@ class Game extends Component {
   }
 
   jumpTo(step) {
+    const history = this.state.history.slice(0, step + 1);
     this.setState({
+      history,
       stepNumber: step,
       xIsNext: (step % 2) ? false : true,
     });
@@ -51,8 +64,9 @@ class Game extends Component {
     const winner = calculateWinner(current.squares);
 
     const moves = history.map((step, move) => {
+      const { x, y } = step.checked;
       const desc = move ?
-        'Move #' + move :
+        `Move (${x}, ${y})` :
         'Game start';
       
       return (
@@ -74,7 +88,7 @@ class Game extends Component {
         <div className="game-board">
           <Board 
             squares={current.squares}
-            onClick={(i) => this.handleClick(i)} />
+            onClick={(x, y) => this.handleClick(x, y)} />
         </div>
         <div className="game-info">
           <div>{status}</div>

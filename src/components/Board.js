@@ -1,39 +1,18 @@
 import React, { Component } from 'react';
-
-function Square(props) {
-  return (
-    <button className="square"
-      onClick={props.onClick}>
-      {props.value}
-    </button>
-  );
-}
+import Row from './Row';
 
 class Board extends Component {
-  renderSquare(i) {
-    return <Square
-             value={this.props.squares[i]}
-             onClick={() => this.props.onClick(i)}  />;
-  }
-
   render() {
+    const { squares, onClick } = this.props;
     return (
       <div>
-        <div className="board-row">
-          {this.renderSquare(0)}
-          {this.renderSquare(1)}
-          {this.renderSquare(2)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(3)}
-          {this.renderSquare(4)}
-          {this.renderSquare(5)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(6)}
-          {this.renderSquare(7)}
-          {this.renderSquare(8)}
-        </div>
+        {squares.map((row, i) => (
+          <Row 
+            key={i}
+            row={row}
+            rowIdx={i}
+            onClick={onClick} />
+        ))}
       </div>
     );
   }
