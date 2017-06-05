@@ -39,7 +39,7 @@ class Game extends Component {
 
     squares[x][y] = this.state.xIsNext ? 'X' : 'O';
     const checked = { x: x + 1, y: y + 1 };
-    
+
     this.setState({
       history: history.concat([{
         squares,
@@ -76,14 +76,14 @@ class Game extends Component {
   }
 
   render() {
-    const { history, highLights, stepNumber } = this.state;
+    const { highLights, history, stepNumber, xIsNext } = this.state;
     const current = history[stepNumber];
 
     let status;
     if (highLights.length > 0) {
-      status = `Winner: ${this.state.xIsNext ? 'O' : 'X'}`;
+      status = `Winner: ${xIsNext ? 'O' : 'X'}`;
     } else {
-      status = `Next Player: ${this.state.xIsNext ? 'X' : 'O'}`;
+      status = `Next Player: ${xIsNext ? 'X' : 'O'}`;
     }
 
     return (
