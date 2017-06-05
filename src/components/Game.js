@@ -18,6 +18,7 @@ class Game extends Component {
           y: 0
         }
       }],
+      highLights: [],
       stepNumber: 0,
       xIsNext: true,
     };
@@ -27,9 +28,15 @@ class Game extends Component {
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
     const squares = cloneNestedArray(current.squares.slice());
-    if (calculateWinner(squares) || squares[x][y]) {
+    const winner = calculateWinner(squares);
+
+    if (winner) {
+      this.updateHighLights(winner);
+      return;
+    } else if (squares[x][y]) {
       return;
     }
+
     squares[x][y] = this.state.xIsNext ? 'X' : 'O';
     const checked = { x: x + 1, y: y + 1 };
     
@@ -46,6 +53,10 @@ class Game extends Component {
   toggleOrder = () => {
     const history = this.state.history.slice().reverse();
     this.setState({ history });
+  }
+
+  updateHighLights = (highLights) => {
+    this.setState({ highLights });
   }
 
   jumpTo = (step) => {
@@ -65,13 +76,12 @@ class Game extends Component {
   }
 
   render() {
-    const history = this.state.history;
-    const current = history[this.state.stepNumber];
-    const winner = calculateWinner(current.squares);
+    const { history, highLights, stepNumber } = this.state;
+    const current = history[stepNumber];
 
     let status;
-    if (winner) {
-      status = `Winner: ${winner}`;
+    if (highLights.length > 0) {
+      status = `Winner: ${this.state.xIsNext ? 'O' : 'X'}`;
     } else {
       status = `Next Player: ${this.state.xIsNext ? 'X' : 'O'}`;
     }
@@ -80,6 +90,7 @@ class Game extends Component {
       <div className="game">
         <div className="game-board">
           <Board 
+            highLights={highLights}
             squares={current.squares}
             onClick={(x, y) => this.handleClick(x, y)} />
         </div>

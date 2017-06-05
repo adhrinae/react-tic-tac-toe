@@ -41,12 +41,16 @@ export function calculateWinner(squares) {
       { x: 2, y: 0 }
     ],
   ];
+
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
-    if (squares[a.x][a.y] && squares[a.x][a.y] === squares[b.x][b.y] && squares[a.x][a.y] === squares[c.x][c.y]) {
-      return squares[a.x][a.y];
+    if (squares[a.x][a.y] &&
+          squares[a.x][a.y] === squares[b.x][b.y] &&
+            squares[a.x][a.y] === squares[c.x][c.y]) {
+      return lines[i];
     }
   }
+
   return null;
 }
 
