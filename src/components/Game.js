@@ -28,17 +28,19 @@ class Game extends Component {
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
     const squares = cloneNestedArray(current.squares.slice());
-    const winner = calculateWinner(squares);
 
-    if (winner) {
-      this.updateHighLights(winner);
-      return;
-    } else if (squares[x][y]) {
+    if (calculateWinner(squares) || squares[x][y]) {
       return;
     }
 
     squares[x][y] = this.state.xIsNext ? 'X' : 'O';
     const checked = { x: x + 1, y: y + 1 };
+
+    const winner = calculateWinner(squares);
+
+    if (winner) {
+      this.updateHighLights(winner);
+    }
 
     this.setState({
       history: history.concat([{
