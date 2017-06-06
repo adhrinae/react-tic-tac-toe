@@ -28,8 +28,9 @@ class Game extends Component {
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
     const squares = cloneNestedArray(current.squares.slice());
+    const highLights = this.state.highLights;
 
-    if (calculateWinner(squares) || squares[x][y]) {
+    if (highLights.length > 0 || squares[x][y]) {
       return;
     }
 
@@ -50,6 +51,10 @@ class Game extends Component {
       stepNumber: history.length,
       xIsNext: !this.state.xIsNext,
     });
+  }
+
+  updateHighLights(highLights) {
+    this.setState({ highLights });
   }
 
   toggleOrder = () => {
@@ -87,7 +92,14 @@ class Game extends Component {
 
     let status;
     if (highLights.length > 0) {
-      status = `Winner: ${xIsNext ? 'O' : 'X'}`;
+      const { x, y } = highLights[0];
+      let winnerSymbol = current.squares[x][y];
+
+      if (!winnerSymbol) {
+        winnerSymbol = history[stepNumber - 1].squares[x][y];
+      }
+
+      status = `Winner: ${winnerSymbol}`;
     } else {
       status = `Next Player: ${xIsNext ? 'X' : 'O'}`;
     }
