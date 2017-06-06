@@ -63,6 +63,10 @@ class Game extends Component {
 
   jumpTo = (step) => {
     const history = this.state.history.slice(0, step + 1);
+    const current = history[history.length - 1];
+    const highlights = calculateWinner(current.squares) || [];
+
+    this.updateHighLights(highlights);
     this.setState({
       history,
       stepNumber: step,
