@@ -36,7 +36,13 @@ class Game extends Component {
 
     squares[x][y] = this.state.xIsNext ? 'X' : 'O';
     const checked = { x: x + 1, y: y + 1 };
-    
+
+    const winner = calculateWinner(squares);
+
+    if (winner) {
+      this.updateHighLights(winner);
+    }
+
     this.setState({
       history: history.concat([{
         squares,
@@ -44,14 +50,6 @@ class Game extends Component {
       }]),
       stepNumber: history.length,
       xIsNext: !this.state.xIsNext,
-    }, () => {
-      const latestHistory = this.state.history[this.state.history.length - 1];
-      const latestSquares = latestHistory.squares;
-      const winner = calculateWinner(latestSquares);
-
-      if (winner) {
-        this.updateHighLights(winner);
-      }
     });
   }
 
@@ -64,8 +62,16 @@ class Game extends Component {
     this.setState({ history });
   }
 
+  updateHighLights = (highLights) => {
+    this.setState({ highLights });
+  }
+
   jumpTo = (step) => {
     const history = this.state.history.slice(0, step + 1);
+    const current = history[history.length - 1];
+    const highlights = calculateWinner(current.squares) || [];
+
+    this.updateHighLights(highlights);
     this.setState({
       history,
       stepNumber: step,
@@ -81,7 +87,7 @@ class Game extends Component {
   }
 
   render() {
-    const { history, highLights, stepNumber } = this.state;
+    const { highLights, history, stepNumber, xIsNext } = this.state;
     const current = history[stepNumber];
 
     let status;
@@ -95,7 +101,7 @@ class Game extends Component {
 
       status = `Winner: ${winnerSymbol}`;
     } else {
-      status = `Next Player: ${this.state.xIsNext ? 'X' : 'O'}`;
+      status = `Next Player: ${xIsNext ? 'X' : 'O'}`;
     }
 
     return (
